@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-
-
+#include <conio.h>
+struct cursor
+{
+    int x;
+    int y;
+};
 
 
 int set_console_width(const int width);
@@ -18,8 +22,6 @@ void white_tile (int x, int y)
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
-    x--;
-    y--;
 
     set_cursor (x_cursor[x],y_cursor[y]);
     SetConsoleTextAttribute(hConsole, 7);
@@ -36,8 +38,6 @@ void Black_tile (int x, int y)
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
-    x--;
-    y--;
 
     set_cursor (x_cursor[x],y_cursor[y]);
     SetConsoleTextAttribute(hConsole, 4);
@@ -47,6 +47,34 @@ void Black_tile (int x, int y)
     set_cursor (x_cursor[x],y_cursor[y]+2);
     printf (smallrow);
 }
+void Playable_tile (int x, int y)
+{
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    int x_cursor[8] = {2,11,20,29,38,47,56,65};
+    int y_cursor[8] = {1,5,9,13,17,21,25,29};
+    x--;
+    y--;
+
+    set_cursor (x_cursor[x]+6,y_cursor[y]);
+    SetConsoleTextAttribute(hConsole, 8);
+    printf ("\xDB");
+}
+void Cursor_tile (int x, int y)
+{
+    if (y<8){
+    int x_cursor[8] = {2,11,20,29,38,47,56,65};
+    int y_cursor[8] = {1,5,9,13,17,21,25,29};
+
+    set_cursor (x_cursor[x]+3,y_cursor[y]+1);
+    }
+    else{
+    int x_cursor2[5] = {2,10,22,30,46};
+    set_cursor (x_cursor2[x],34);
+    }
+}
+
+
 
 #define row                 "\xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB"
 #define smallrow            "\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
@@ -59,26 +87,22 @@ void Black_tile (int x, int y)
 
 int main()
 {
+    struct cursor cursor = {0,0};
     unsigned int brett[8][8] ={0};
-    int cursor_position_x, cursor_position_y;
-    set_code_page (437);
-    //set_console_width(67);
-    set_console_size(75, 35);
-    int i, j, y = 1;
-
-
+    int lastplay = Schwarz;
+    brett [3] [4] = Weiss;
+    brett [4] [3] = Weiss;
+    brett [3] [3] = Schwarz;
+    brett [4] [4] = Schwarz;
+    brett [2] [3] = Spielbar;
+    //set_code_page (437);
+    set_console_size(80, 36);
      HANDLE  hConsole;
-    int k;
 
-  hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+ hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+while (1)
+{
 
-  // you can loop k higher to see more color choices
-/*  for(k = 1; k < 255; k++)
-  {
-    SetConsoleTextAttribute(hConsole, k);
-    printf("%3d  %s\n", k, "I want to be nice today!");
-  }
-*/
 SetConsoleTextAttribute(hConsole, 2);
 set_cursor(2,1);
 printf (row);
@@ -128,14 +152,73 @@ set_cursor(2,30);
 printf (row);
 set_cursor(2,31);
 printf (row);
-white_tile (4,5);
-white_tile (5,4);
-Black_tile (4,4);
-Black_tile (5,5);
+SetConsoleTextAttribute(hConsole, 8);
+set_cursor (2,34);
+printf ("Laden");
+set_cursor (10,34);
+printf ("Speichern");
+set_cursor (22,34);
+printf ("Pause");
+set_cursor (30,34);
+printf ("Ueberspringen");
+set_cursor (46,34);
+printf ("Aufgeben");
 
+for (size_t i = 0; i < 8; i++)
+{
+    for (size_t j = 0; j < 8; j++)
+    {
+        if (brett[i][j] == Weiss)
+        {
+            white_tile (i, j);
+        }
+        else if (brett[i][j] == Schwarz)
+        {
+            Black_tile (i, j);
+        }
+        else if (brett[i][j] == Spielbar)
+        {
+            Playable_tile (i, j);
+        }
+    }
+}
+Cursor_tile (cursor.x, cursor.y);
 
-printf ("\n");
-getchar();
+ switch(getch()){
+        case 72:
+            if (cursor.y >0)
+                cursor.y--;
+            break;
+        case 80:
+            if (cursor.y <8)
+                cursor.y++;
+            break;
+        case 77:
+            if (cursor.x <7)
+                cursor.x++;
+            break;
+        case 75:
+            if (cursor.x >0)
+                cursor.x--;
+            break;
+        case 13:
+            if (lastplay == Schwarz)
+            {
+            brett [cursor.x] [cursor.y] = Weiss;
+            lastplay = Weiss;
+            }
+            else if (lastplay == Weiss)
+            {
+            brett [cursor.x] [cursor.y] = Schwarz;
+            lastplay = Schwarz;
+            }
+            break;
+        }
+        if (cursor.y >= 8 && cursor.x >= 4)
+        {
+            cursor.x = 4;
+        }
+}
 return 0;
 }
 

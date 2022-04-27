@@ -4,3 +4,9 @@
 	<stdlib.h>
 	<windows.h>
 
+1651081211 source:c:\users\yanni\documents\tprl\reversi-in-c\main.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<conio.h>
+
