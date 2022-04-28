@@ -53,8 +53,6 @@ void Playable_tile (int x, int y)
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
-    x--;
-    y--;
 
     set_cursor (x_cursor[x]+6,y_cursor[y]);
     SetConsoleTextAttribute(hConsole, 8);
@@ -73,7 +71,21 @@ void Cursor_tile (int x, int y)
     set_cursor (x_cursor2[x],34);
     }
 }
+void Empty_tile (int x, int y)
+{
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    int x_cursor[8] = {2,11,20,29,38,47,56,65};
+    int y_cursor[8] = {1,5,9,13,17,21,25,29};
 
+    set_cursor (x_cursor[x],y_cursor[y]);
+    SetConsoleTextAttribute(hConsole, 2);
+    printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
+    set_cursor (x_cursor[x],y_cursor[y]+1);
+    printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
+    set_cursor (x_cursor[x],y_cursor[y]+2);
+    printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
+}
 
 
 #define row                 "\xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB"
@@ -104,6 +116,8 @@ while (1)
 {
 
 SetConsoleTextAttribute(hConsole, 2);
+
+/*
 set_cursor(2,1);
 printf (row);
 set_cursor(2,2);
@@ -152,6 +166,7 @@ set_cursor(2,30);
 printf (row);
 set_cursor(2,31);
 printf (row);
+*/
 SetConsoleTextAttribute(hConsole, 8);
 set_cursor (2,34);
 printf ("Laden");
@@ -168,17 +183,22 @@ for (size_t i = 0; i < 8; i++)
 {
     for (size_t j = 0; j < 8; j++)
     {
-        if (brett[i][j] == Weiss)
+        if (brett[i][j] == Leer)
         {
-            white_tile (i, j);
+            Empty_tile (i,j);
+        }
+        else if (brett[i][j] == Weiss)
+        {
+            white_tile (i,j);
         }
         else if (brett[i][j] == Schwarz)
         {
-            Black_tile (i, j);
+            Black_tile (i,j);
         }
         else if (brett[i][j] == Spielbar)
         {
-            Playable_tile (i, j);
+            Empty_tile (i,j);
+            Playable_tile (i,j);
         }
     }
 }
