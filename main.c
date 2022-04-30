@@ -2,12 +2,18 @@
 #include <stdlib.h>
 #include <windows.h>
 #include <conio.h>
+#include <time.h>
 struct cursor
 {
     int x;
     int y;
 };
-
+struct time_played
+{
+    int h;
+    int m;
+    int s;
+};
 
 int set_console_width(const int width);
 int set_console_size(const int width, const int height);
@@ -40,7 +46,7 @@ void Black_tile (int x, int y)
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
 
     set_cursor (x_cursor[x],y_cursor[y]);
-    SetConsoleTextAttribute(hConsole, 4);
+    SetConsoleTextAttribute(hConsole, 8);
     printf (smallrow);
     set_cursor (x_cursor[x],y_cursor[y]+1);
     printf (smallrow);
@@ -54,17 +60,35 @@ void Playable_tile (int x, int y)
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
 
-    set_cursor (x_cursor[x]+6,y_cursor[y]);
-    SetConsoleTextAttribute(hConsole, 8);
+    set_cursor (x_cursor[x]+3,y_cursor[y]+1);
+    SetConsoleTextAttribute(hConsole, 4);
     printf ("\xDB");
 }
 void Cursor_tile (int x, int y)
 {
-    if (y<8){
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
+        for (size_t i = 0; i < 8; i++)
+    {
+        set_cursor  (0,y_cursor[i]-1);
+        printf ("\33[2K");
+    }
+        set_cursor  (0,32);
+        printf ("\33[2K");
+    if (y<8){
 
-    set_cursor (x_cursor[x]+3,y_cursor[y]+1);
+
+
+
+
+    set_cursor (x_cursor[x]-1,y_cursor[y]-1);
+    SetConsoleTextAttribute(hConsole, 1);
+    printf ("\xc9\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbb");
+    set_cursor (x_cursor[x]-1,y_cursor[y]+3);
+    printf ("\xc8\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbc");
+    set_cursor (x_cursor[x]+3,y_cursor[y]+2);
     }
     else{
     int x_cursor2[5] = {2,10,22,30,46};
@@ -86,9 +110,53 @@ void Empty_tile (int x, int y)
     set_cursor (x_cursor[x],y_cursor[y]+2);
     printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
 }
+int Count_Tiles (int brett[8][8],int tile)
+{
+    int k=0;
+    for (int i=0; i<8; i++)
+    {
+        for (int j=0; j<8; j++)
+        {
+            if (brett[i][j]==tile)
+            {
+                k++;
+            }
+        }
+    }
+    return k;
+}
+struct time_played caculate_time_played(long long starttime)
+{
+    struct time_played time_played_since;
+    long long time_played_in_seconds = time(NULL)-starttime;
+    time_played_since.s = time_played_in_seconds % 60;
+    time_played_since.m = (time_played_in_seconds / 60) % 60;
+    time_played_since.h = (time_played_in_seconds / 3600);
+    return time_played_since;
+}
+long long pause (long long starttime)
+{
+    long long pausestart = time(NULL);
 
+    HANDLE  hConsole;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hConsole, 4);
+    set_cursor (78,1);
+    printf ("||");
+    set_cursor (25,10);
+    printf ("Das Spiel ist Pausiert!");
+    set_cursor (10,11);
+    printf ("Druecken sie eine Beliebige Taste zum Fortfahren");
+    getch();
+    set_cursor (78,1);
+    printf ("  ");
+    set_cursor (70,10);
+    printf ("\33[2K");
+    set_cursor (70,11);
+    printf ("\33[2K");
 
-#define row                 "\xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB  \xDB\xDB\xDB\xDB\xDB\xDB\xDB"
+    return starttime+time(NULL)-pausestart;
+    }
 #define smallrow            "\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
 
 
@@ -102,71 +170,23 @@ int main()
     struct cursor cursor = {0,0};
     unsigned int brett[8][8] ={0};
     int lastplay = Schwarz;
+    long long starttime = time(NULL);
+    struct time_played time_played;
+
+
     brett [3] [4] = Weiss;
     brett [4] [3] = Weiss;
     brett [3] [3] = Schwarz;
     brett [4] [4] = Schwarz;
     brett [2] [3] = Spielbar;
-    //set_code_page (437);
-    set_console_size(80, 36);
+    set_console_size(100, 36);
      HANDLE  hConsole;
 
  hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 while (1)
 {
 
-SetConsoleTextAttribute(hConsole, 2);
 
-/*
-set_cursor(2,1);
-printf (row);
-set_cursor(2,2);
-printf (row);
-set_cursor(2,3);
-printf (row);
-set_cursor(2,5);
-printf (row);
-set_cursor(2,6);
-printf (row);
-set_cursor(2,7);
-printf (row);
-set_cursor(2,9);
-printf (row);
-set_cursor(2,10);
-printf (row);
-set_cursor(2,11);
-printf (row);
-set_cursor(2,13);
-printf (row);
-set_cursor(2,14);
-printf (row);
-set_cursor(2,15);
-printf (row);
-set_cursor(2,17);
-printf (row);
-set_cursor(2,18);
-printf (row);
-set_cursor(2,19);
-printf (row);
-set_cursor(2,21);
-printf (row);
-set_cursor(2,22);
-printf (row);
-set_cursor(2,23);
-printf (row);
-set_cursor(2,25);
-printf (row);
-set_cursor(2,26);
-printf (row);
-set_cursor(2,27);
-printf (row);
-set_cursor(2,29);
-printf (row);
-set_cursor(2,30);
-printf (row);
-set_cursor(2,31);
-printf (row);
-*/
 SetConsoleTextAttribute(hConsole, 8);
 set_cursor (2,34);
 printf ("Laden");
@@ -179,6 +199,16 @@ printf ("Ueberspringen");
 set_cursor (46,34);
 printf ("Aufgeben");
 
+set_cursor (80,5);
+printf ("Weiss: %d", Count_Tiles (brett,Weiss));
+set_cursor (80,9);
+printf ("Schwarz: %d", Count_Tiles (brett,Schwarz));
+
+
+set_cursor (80,1);
+time_played= caculate_time_played(starttime);
+if (time_played.s%2==0) printf ("%i : %i : %i ", time_played.h, time_played.m, time_played.s);
+else printf ("%i   %i   %i ", time_played.h, time_played.m, time_played.s);
 for (size_t i = 0; i < 8; i++)
 {
     for (size_t j = 0; j < 8; j++)
@@ -222,16 +252,39 @@ Cursor_tile (cursor.x, cursor.y);
                 cursor.x--;
             break;
         case 13:
-            if (lastplay == Schwarz)
-            {
-            brett [cursor.x] [cursor.y] = Weiss;
-            lastplay = Weiss;
-            }
-            else if (lastplay == Weiss)
-            {
-            brett [cursor.x] [cursor.y] = Schwarz;
-            lastplay = Schwarz;
-            }
+                if (cursor.y<8)
+                {
+                    if (lastplay == Schwarz)
+                    {
+                    brett [cursor.x] [cursor.y] = Weiss;
+                    lastplay = Weiss;
+                    }
+                    else if (lastplay == Weiss)
+                    {
+                    brett [cursor.x] [cursor.y] = Schwarz;
+                    lastplay = Schwarz;
+                    }
+                }
+                else if (cursor.y==8 && cursor.x==0)
+                {
+                //laden
+                }
+                else if (cursor.y==8 && cursor.x==1)
+                {
+                //speichern
+                }
+                else if (cursor.y==8 && cursor.x==2)
+                {
+                starttime = pause (starttime);
+                }
+                else if (cursor.y==8 && cursor.x==3)
+                {
+                //passen
+                }
+                else if (cursor.y==8 && cursor.x==4)
+                {
+                //aufgeben
+                }
             break;
         }
         if (cursor.y >= 8 && cursor.x >= 4)
