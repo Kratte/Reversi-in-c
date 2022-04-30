@@ -14,6 +14,10 @@ struct time_played
     int m;
     int s;
 };
+struct directions
+{
+    int playable,UL,U,UR,L,R,DL,D,DR;
+};
 
 int set_console_width(const int width);
 int set_console_size(const int width, const int height);
@@ -21,6 +25,249 @@ int set_code_page(const int code_page);
 int set_cursor(const int x, const int y);
 int set_color(const char color);
 
+
+
+
+
+//
+struct directions is_playable(int x, int y, int brett[8][8], int lastplay)
+{
+    #define Leer        0
+    struct directions directions={0,0,0,0,0,0,0,0};
+    directions.playable = FALSE;
+    if ( !is_valid_position( x, y ) ) return directions;
+    if ( brett[x][y] != Leer ) return directions;
+    int current_player;
+
+if (lastplay == 1)
+{
+    current_player = 2;
+}
+else
+{
+    current_player = 1;
+}
+    // Test UL diagonal
+    int y_current = y-1, x_current = x-1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    {
+        y_current -= 1;
+        x_current -= 1;
+    }
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.UL = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test UP path
+    y_current = y-1, x_current = x;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+        y_current -= 1;
+
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.U = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test UR diagonal
+    y_current = y-1, x_current = x+1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    {
+        y_current -= 1;
+        x_current += 1;
+    }
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.UR = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test LEFT path
+    y_current = y, x_current = x-1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+        x_current -= 1;
+
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.L = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test RIGHT path
+    y_current = y, x_current = x+1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+        x_current += 1;
+
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.R = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test DL diagonal
+    y_current = y+1, x_current = x-1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    {
+        y_current += 1;
+        x_current -= 1;
+    }
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.DL = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test DOWN path
+    y_current = y+1, x_current = x;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+        y_current ++;
+
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player  )
+    {
+        directions.D = 1;
+        directions.playable = TRUE;
+    }
+
+    // Test DR diagonal
+    y_current = y+1, x_current = x+1;
+    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    {
+        y_current += 1;
+        x_current += 1;
+    }
+    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    {
+        directions.DR = 1;
+        directions.playable = TRUE;
+    }
+    return directions;
+}
+
+void capture_pieces( int x, int y, int brett[8][8],int lastplay, int playable_tiles_direction[8][8][8] )
+{
+int current_player;
+int opponent_player;
+if (lastplay == 1)
+{
+    current_player = 2;
+    opponent_player = 1;
+}
+else
+{
+    current_player = 1;
+    opponent_player = 2;
+}
+    int x_current, y_current;
+
+    // Capture UL diagonal
+    if ( playable_tiles_direction[x][y][0] )
+    {
+        y_current = y-1, x_current = x-1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current -= 1;
+            x_current -= 1;
+        }
+    }
+
+    // Capture UP path
+    if ( playable_tiles_direction[x][y][1] )
+    {
+        y_current = y-1, x_current = x;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current -= 1;
+        }
+    }
+
+    // Capture UR diagonal
+    if ( playable_tiles_direction[x][y][2] )
+    {
+        y_current = y-1, x_current = x+1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current -= 1;
+            x_current += 1;
+        }
+    }
+
+    // Capture LEFT path
+    if ( playable_tiles_direction[x][y][3] )
+    {
+        y_current = y, x_current = x-1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            x_current -= 1;
+        }
+    }
+
+    // Capture RIGHT path
+    if ( playable_tiles_direction[x][y][4] )
+    {
+        y_current = y, x_current = x+1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            x_current += 1;
+        }
+    }
+
+    // Capture DL diagonal
+    if ( playable_tiles_direction[x][y][5] )
+    {
+        y_current = y+1, x_current = x-1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current += 1;
+            x_current -= 1;
+        }
+    }
+
+    // Capture DOWN path
+    if ( playable_tiles_direction[x][y][6] )
+    {
+        y_current = y+1, x_current = x;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current += 1;
+        }
+    }
+
+    // Capture DR diagonal
+    if ( playable_tiles_direction[x][y][7] )
+    {
+        y_current = y+1, x_current = x+1;
+        while ( brett[x_current][y_current] == opponent_player )
+        {
+            brett[x_current][y_current] = current_player;
+            y_current += 1;
+            x_current += 1;
+        }
+    }
+}
+
+int distance( int i1, int j1, int i2, int j2 )
+{
+    int di = abs( i1 - i2 ), dj = abs( j1 - j2 );
+    if ( di > 0 ) return di;
+    return dj;
+}
+
+int is_valid_position( int i, int j )
+{
+    if ( i < 0 || i >= 8 || j < 0 || j >= 8 ) return FALSE;
+    return TRUE;
+}
+
+//
 void white_tile (int x, int y)
 {
 #define smallrow            "\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
@@ -53,21 +300,25 @@ void Black_tile (int x, int y)
     set_cursor (x_cursor[x],y_cursor[y]+2);
     printf (smallrow);
 }
-void Playable_tile (int x, int y)
+void Playable_tile (int x, int y,int lastplay)
 {
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (lastplay == 1) SetConsoleTextAttribute(hConsole, 7);
+    else   SetConsoleTextAttribute(hConsole, 8);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
 
     set_cursor (x_cursor[x]+3,y_cursor[y]+1);
-    SetConsoleTextAttribute(hConsole, 4);
+
     printf ("\xDB");
 }
-void Cursor_tile (int x, int y)
+void Cursor_tile (int x, int y,int lastplay)
 {
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (lastplay == 1) SetConsoleTextAttribute(hConsole, 7);
+    else   SetConsoleTextAttribute(hConsole, 8);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
         for (size_t i = 0; i < 8; i++)
@@ -84,18 +335,17 @@ void Cursor_tile (int x, int y)
 
 
     set_cursor (x_cursor[x]-1,y_cursor[y]-1);
-    SetConsoleTextAttribute(hConsole, 1);
     printf ("\xc9\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbb");
     set_cursor (x_cursor[x]-1,y_cursor[y]+3);
     printf ("\xc8\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbc");
     set_cursor (x_cursor[x]+3,y_cursor[y]+2);
     }
     else{
-    int x_cursor2[5] = {2,10,22,30,46};
+    int x_cursor2[5] = {2,10,22,30,39};
     set_cursor (x_cursor2[x],34);
     }
 }
-void Empty_tile (int x, int y)
+void Leer_tile (int x, int y)
 {
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -168,8 +418,10 @@ long long pause (long long starttime)
 int main()
 {
     struct cursor cursor = {0,0};
-    unsigned int brett[8][8] ={0};
-    int lastplay = Schwarz;
+    struct directions direction;
+    int brett[8][8] ={0};
+    int playable_tiles_direction[8][8][8] = {0};
+    int lastplay = Schwarz, white_tiles, Black_tiles;
     long long starttime = time(NULL);
     struct time_played time_played;
 
@@ -178,7 +430,6 @@ int main()
     brett [4] [3] = Weiss;
     brett [3] [3] = Schwarz;
     brett [4] [4] = Schwarz;
-    brett [2] [3] = Spielbar;
     set_console_size(100, 36);
      HANDLE  hConsole;
 
@@ -195,27 +446,64 @@ printf ("Speichern");
 set_cursor (22,34);
 printf ("Pause");
 set_cursor (30,34);
-printf ("Ueberspringen");
-set_cursor (46,34);
+printf ("Passen");
+set_cursor (39,34);
 printf ("Aufgeben");
 
-set_cursor (80,5);
-printf ("Weiss: %d", Count_Tiles (brett,Weiss));
-set_cursor (80,9);
-printf ("Schwarz: %d", Count_Tiles (brett,Schwarz));
 
+white_tiles=Count_Tiles (brett,Weiss);
+Black_tiles=Count_Tiles (brett,Schwarz);
+set_cursor (80,5);
+printf ("Weiss: %i", white_tiles);
+set_cursor (80,7);
+printf ("Schwarz: %i", Black_tiles);
+set_cursor (80,11);
+if (lastplay==Schwarz) printf ("Spieler: Weiss    ");
+else printf ("Spieler: Schwarz");
 
 set_cursor (80,1);
 time_played= caculate_time_played(starttime);
 if (time_played.s%2==0) printf ("%i : %i : %i ", time_played.h, time_played.m, time_played.s);
 else printf ("%i   %i   %i ", time_played.h, time_played.m, time_played.s);
+
+for (int x = 0; x < 8; x++)
+{
+    for (int y = 0; y < 8; y++)
+    {
+        direction = is_playable(x,y,brett,lastplay);
+        if (brett [x][y] ==  Leer||brett [x][y] == Spielbar)
+        {
+            if (direction.playable==1) brett[x][y]=Spielbar;
+            if (direction.playable==0) brett[x][y]=Leer;
+            if (direction.UL == 1) playable_tiles_direction[x][y][0] = 1;
+            else playable_tiles_direction[x][y][0] = 0;
+            if (direction.U == 1) playable_tiles_direction[x][y][1] = 1;
+            else playable_tiles_direction[x][y][1] = 0;
+            if (direction.UR == 1) playable_tiles_direction[x][y][2] = 1;
+            else playable_tiles_direction[x][y][2] = 0;
+            if (direction.L == 1) playable_tiles_direction[x][y][3] = 1;
+            else playable_tiles_direction[x][y][3] = 0;
+            if (direction.R == 1) playable_tiles_direction[x][y][4] = 1;
+            else playable_tiles_direction[x][y][4] = 0;
+            if (direction.DL == 1) playable_tiles_direction[x][y][5] = 1;
+            else playable_tiles_direction[x][y][5] = 0;
+            if (direction.D == 1) playable_tiles_direction[x][y][6] = 1;
+            else playable_tiles_direction[x][y][6] = 0;
+            if (direction.DR == 1) playable_tiles_direction[x][y][7] = 1;
+            else playable_tiles_direction[x][y][7] = 0;
+        }
+    }
+}
+
+
+
 for (size_t i = 0; i < 8; i++)
 {
     for (size_t j = 0; j < 8; j++)
     {
         if (brett[i][j] == Leer)
         {
-            Empty_tile (i,j);
+            Leer_tile (i,j);
         }
         else if (brett[i][j] == Weiss)
         {
@@ -227,12 +515,23 @@ for (size_t i = 0; i < 8; i++)
         }
         else if (brett[i][j] == Spielbar)
         {
-            Empty_tile (i,j);
-            Playable_tile (i,j);
+            Leer_tile (i,j);
+            Playable_tile (i,j,lastplay);
         }
     }
 }
-Cursor_tile (cursor.x, cursor.y);
+set_cursor (80,17);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][0]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][1]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][2]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][3]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][4]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][5]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][6]);
+printf ("%i", playable_tiles_direction[cursor.x][cursor.y][7]);
+printf (" %i", brett [cursor.x][cursor.y]);
+Cursor_tile (cursor.x, cursor.y, lastplay);
+
 
  switch(getch()){
         case 72:
@@ -254,15 +553,20 @@ Cursor_tile (cursor.x, cursor.y);
         case 13:
                 if (cursor.y<8)
                 {
-                    if (lastplay == Schwarz)
+                    if (brett[cursor.x][cursor.y]==Spielbar)
                     {
-                    brett [cursor.x] [cursor.y] = Weiss;
-                    lastplay = Weiss;
-                    }
-                    else if (lastplay == Weiss)
-                    {
-                    brett [cursor.x] [cursor.y] = Schwarz;
-                    lastplay = Schwarz;
+                        if (lastplay == Schwarz)
+                        {
+                        brett [cursor.x] [cursor.y] = Weiss;
+                        capture_pieces(cursor.x,cursor.y,brett,lastplay,playable_tiles_direction);
+                        lastplay = Weiss;
+                        }
+                        else if (lastplay == Weiss)
+                        {
+                        brett [cursor.x] [cursor.y] = Schwarz;
+                        capture_pieces(cursor.x,cursor.y,brett,lastplay,playable_tiles_direction);
+                        lastplay = Schwarz;
+                        }
                     }
                 }
                 else if (cursor.y==8 && cursor.x==0)
@@ -279,7 +583,14 @@ Cursor_tile (cursor.x, cursor.y);
                 }
                 else if (cursor.y==8 && cursor.x==3)
                 {
-                //passen
+                if (lastplay == Schwarz)
+                    {
+                        lastplay = Weiss;
+                    }
+                else if (lastplay == Weiss)
+                    {
+                        lastplay = Schwarz;
+                    }
                 }
                 else if (cursor.y==8 && cursor.x==4)
                 {
