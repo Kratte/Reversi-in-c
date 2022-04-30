@@ -345,7 +345,10 @@ void Cursor_tile (int x, int y,int lastplay)
     set_cursor (x_cursor2[x],34);
     }
 }
-void Leer_tile (int x, int y)
+
+
+
+void empty_tile (int x, int y)
 {
     HANDLE  hConsole;
     hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -360,6 +363,11 @@ void Leer_tile (int x, int y)
     set_cursor (x_cursor[x],y_cursor[y]+2);
     printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
 }
+
+/*
+counts the number of tiles of a player
+
+*/
 int Count_Tiles (int brett[8][8],int tile)
 {
     int k=0;
@@ -375,6 +383,11 @@ int Count_Tiles (int brett[8][8],int tile)
     }
     return k;
 }
+/*
+takes the UNIX timestamp when the game was started
+and returns a struct with the time in hours, minutes and seconds
+*/
+
 struct time_played caculate_time_played(long long starttime)
 {
     struct time_played time_played_since;
@@ -503,7 +516,7 @@ for (size_t i = 0; i < 8; i++)
     {
         if (brett[i][j] == Leer)
         {
-            Leer_tile (i,j);
+            empty_tile (i,j);
         }
         else if (brett[i][j] == Weiss)
         {
@@ -515,7 +528,7 @@ for (size_t i = 0; i < 8; i++)
         }
         else if (brett[i][j] == Spielbar)
         {
-            Leer_tile (i,j);
+            empty_tile (i,j);
             Playable_tile (i,j,lastplay);
         }
     }
