@@ -29,15 +29,15 @@ int set_color(const char color);
 
 
 
-//
+
 struct directions is_playable(int x, int y, int brett[8][8], int lastplay)
 {
     #define Leer        0
     struct directions directions={0,0,0,0,0,0,0,0};
     directions.playable = FALSE;
     if ( !is_valid_position( x, y ) ) return directions;
-    if ( brett[x][y] != Leer ) return directions;
-    int current_player;
+    //if ( brett[x][y] != Leer ) return directions;
+    int current_player=0;
 
 if (lastplay == 1)
 {
@@ -267,7 +267,6 @@ int is_valid_position( int i, int j )
     return TRUE;
 }
 
-//
 void white_tile (int x, int y)
 {
 #define smallrow            "\xDB\xDB\xDB\xDB\xDB\xDB\xDB"
@@ -345,9 +344,6 @@ void Cursor_tile (int x, int y,int lastplay)
     set_cursor (x_cursor2[x],34);
     }
 }
-
-
-
 void empty_tile (int x, int y)
 {
     HANDLE  hConsole;
@@ -364,6 +360,317 @@ void empty_tile (int x, int y)
     printf ("\xDB\xDB\xDB\xDB\xDB\xDB\xDB");
 }
 
+int save_game ( int brett[8][8], long long starttime, int lastplay, int x, int y, int savegame)
+{
+    int timeplayed = time(NULL) - starttime;
+    FILE *fp;
+    if (savegame == 1) fp = fopen ("savegame1.txt","w");
+    else if(savegame == 2 ) fp = fopen ("savegame2.txt","w");
+    else if(savegame == 3 ) fp = fopen ("savegame3.txt","w");
+    else if(savegame == 4 ) fp = fopen ("savegame4.txt","w");
+    else if(savegame == 5 ) fp = fopen ("savegame5.txt","w");
+    else if(savegame == 6 ) fp = fopen ("savegame6.txt","w");
+    else if(savegame == 7 ) fp = fopen ("savegame7.txt","w");
+    else if(savegame == 8 ) fp = fopen ("savegame8.txt","w");
+    else if(savegame == 9 ) fp = fopen ("savegame9.txt","w");
+    else if(savegame == 10 ) fp = fopen ("savegame10.txt","w");
+    if (fp == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    for (size_t i = 0; i < 8; i++)
+    {
+        for (size_t j = 0; j < 8; j++)
+        {
+            fprintf(fp, "%d ", brett[i][j]);
+        }
+        fprintf(fp, "\n");
+    }
+    fprintf(fp, "%d %d %d %d %d\n", timeplayed ,lastplay, x, y, 0);
+    fclose(fp);
+    return 0;
+}
+
+int load_game (int brett[8][8], long long *starttime, int *lastplay, int *x, int *y, int savegame)
+{
+    int timeplayed;
+    FILE *fp;
+    if (savegame == 1) fp = fopen ("savegame1.txt","r");
+    else if(savegame == 2 ) fp = fopen ("savegame2.txt","r");
+    else if(savegame == 3 ) fp = fopen ("savegame3.txt","r");
+    else if(savegame == 4 ) fp = fopen ("savegame4.txt","r");
+    else if(savegame == 5 ) fp = fopen ("savegame5.txt","r");
+    else if(savegame == 6 ) fp = fopen ("savegame6.txt","r");
+    else if(savegame == 7 ) fp = fopen ("savegame7.txt","r");
+    else if(savegame == 8 ) fp = fopen ("savegame8.txt","r");
+    else if(savegame == 9 ) fp = fopen ("savegame9.txt","r");
+    else if(savegame == 10 ) fp = fopen ("savegame10.txt","r");
+    if (fp == NULL)
+    {
+        printf("Error opening file!\n");
+        exit(1);
+    }
+    printf ("test");
+    for (size_t i = 0; i < 8; i++)
+    {
+        for (size_t j = 0; j < 8; j++)
+        {
+            fscanf(fp, "%d ", &brett[i][j]);
+        }
+    }
+    printf ("test2");
+    fscanf(fp, "%d %d %d %d\n", &timeplayed, lastplay, x, y);
+    printf ("test3");
+    *starttime = time(NULL) - timeplayed;
+    fclose(fp);
+    return 0;
+}
+
+int select_save (int *savegame)
+{
+    struct cursor cursorsave = {0,0};
+    int cursory[11] = {6,8,10,12,14,16,18,20,22,24,26};
+    for (size_t i = 0; i < 32; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+    }
+    set_cursor (20,3);
+    printf("Select savegame to Save:");
+    set_cursor (20,6);
+    printf ("savegame 1");\
+    set_cursor (20,8);
+    printf ("savegame 2");
+    set_cursor (20,10);
+    printf ("savegame 3");
+    set_cursor (20,12);
+    printf ("savegame 4");
+    set_cursor (20,14);
+    printf ("savegame 5");
+    set_cursor (20,16);
+    printf ("savegame 6");
+    set_cursor (20,18);
+    printf ("savegame 7");
+    set_cursor (20,20);
+    printf ("savegame 8");
+    set_cursor (20,22);
+    printf ("savegame 9");
+    set_cursor (20,24);
+    printf ("savegame 10");
+    set_cursor (20,26);
+    printf ("back");
+    while (1)
+    {
+    set_cursor (20,cursory[cursorsave.y]);
+        switch(getch()){
+            case 72:
+                if (cursorsave.y >0)
+                    cursorsave.y--;
+                break;
+            case 80:
+                if (cursorsave.y <10)
+                    cursorsave.y++;
+                break;
+            case 13:
+                *savegame = cursorsave.y+1;
+                    for (size_t i = 0; i < 32; i++)
+                        {
+                            set_cursor (1,i+1);
+                            printf ("\33[2K");
+                        }
+                return cursorsave.y+1;
+            }
+    }
+}
+
+void win_screen (struct time_played time_played, int winner, int white_tiles, int black_tiles)
+{
+    #define Schwarz     1
+    #define Weiss       2
+      for (size_t i = 0; i < 35; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+    }
+    set_cursor (20,5);
+    if (winner == Schwarz) printf ("Schwarz hat gewonnen!");
+    else if (winner == Weiss) printf ("Weiss hat gewonnen!");
+    else printf ("Unentschieden!");
+    set_cursor (20,7);
+    printf ("Spieldauer");
+    set_cursor (20,8);
+    printf ("%ih : %im : %is",time_played.h,time_played.m,time_played.s);
+
+    set_cursor (20,10);
+    printf ("Endspielstand");
+    set_cursor (20,11);
+    printf ("Weiss: %2i", white_tiles);
+    set_cursor (20,12);
+    printf ("Schwarz: %2i", black_tiles);
+    set_cursor (20,14);
+    printf ("Taste druecken um ein neues Spiel zu starten");
+    getch();
+    for (size_t i = 0; i < 35; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+
+    }
+
+
+}
+
+void exit_game ( int brett[8][8], long long starttime, int lastplay, int x, int y)
+{
+    int savegame, i=0,cursor=0;
+    for (size_t i = 0; i < 35; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+    }
+    while (i == 0 )
+    {
+        i=0;
+            set_cursor (20,5);
+                printf ("Wollen Sie das Spiel vorher Speichern?");
+            set_cursor (35,7);
+                printf ("ja    /   nein");
+            if(cursor==0) set_cursor (35,7);
+            else if(cursor==1) set_cursor (45,7);
+switch(getch()){
+            break;
+        case 77:
+                cursor=1;
+            break;
+        case 75:
+                cursor=0;
+            break;
+        case 13:
+        if (cursor==0)
+        {
+            select_save(&savegame);
+            if (savegame == 11)
+            {
+            break;
+            }
+            else
+            {
+            save_game(brett,starttime,lastplay,x,y,savegame);
+            i=1;
+            }
+        break;
+        }
+        else if (cursor==1)
+        {
+        i=1;
+        break;
+        }
+    }
+    for (size_t i = 0; i < 35; i++)
+            {
+            set_cursor (1,i+1);
+            printf ("\33[2K");
+            }
+}
+i=0;
+    while (i == 0 )
+    {
+        i=0;
+            set_cursor (20,5);
+                printf ("Wollen Sie das Spiel Wirklioh beenden?");
+            set_cursor (35,7);
+                printf ("ja    /   nein");
+                if(cursor==0)
+                    set_cursor (35,7);
+                    else
+                    set_cursor (45,7);
+    switch(getch()){
+            break;
+        case 77:
+                cursor=1;
+            break;
+        case 75:
+                cursor=0;
+            break;
+        case 13:
+        if (cursor==0)
+        {
+            exit(0);
+        break;
+        }
+        else if (cursor==1)
+        {
+        return;
+        }
+        break;
+
+        }
+    for (size_t i = 0; i < 35; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+    }
+
+    }
+}
+
+int select_load (int *savegame)
+{
+    struct cursor cursorsave = {0,0};
+    int cursory[11] = {6,8,10,12,14,16,18,20,22,24,26};
+    for (size_t i = 0; i < 32; i++)
+    {
+        set_cursor (1,i+1);
+        printf ("\33[2K");
+    }
+    set_cursor (20,3);
+    printf("Select savegame to Load:");
+    set_cursor (20,6);
+    printf ("savegame 1");\
+    set_cursor (20,8);
+    printf ("savegame 2");
+    set_cursor (20,10);
+    printf ("savegame 3");
+    set_cursor (20,12);
+    printf ("savegame 4");
+    set_cursor (20,14);
+    printf ("savegame 5");
+    set_cursor (20,16);
+    printf ("savegame 6");
+    set_cursor (20,18);
+    printf ("savegame 7");
+    set_cursor (20,20);
+    printf ("savegame 8");
+    set_cursor (20,22);
+    printf ("savegame 9");
+    set_cursor (20,24);
+    printf ("savegame 10");
+    set_cursor (20,26);
+    printf ("back");
+    while (1)
+    {
+    set_cursor (20,cursory[cursorsave.y]);
+        switch(getch()){
+            case 72:
+                if (cursorsave.y >0)
+                    cursorsave.y--;
+                break;
+            case 80:
+                if (cursorsave.y <10)
+                    cursorsave.y++;
+                break;
+            case 13:
+                *savegame = cursorsave.y+1;
+                    for (size_t i = 0; i < 32; i++)
+                        {
+                            set_cursor (1,i+1);
+                            printf ("\33[2K");
+                        }
+                return cursorsave.y+1;
+            }
+    }
+}
 /*
 counts the number of tiles of a player
 
@@ -430,11 +737,12 @@ long long pause (long long starttime)
 
 int main()
 {
+    int h=0;
     struct cursor cursor = {0,0};
     struct directions direction;
     int brett[8][8] ={0};
     int playable_tiles_direction[8][8][8] = {0};
-    int lastplay = Schwarz, white_tiles, Black_tiles;
+    int lastplay = Schwarz, white_tiles, black_tiles,savegame,playable,reset;
     long long starttime = time(NULL);
     struct time_played time_played;
 
@@ -461,15 +769,15 @@ printf ("Pause");
 set_cursor (30,34);
 printf ("Passen");
 set_cursor (39,34);
-printf ("Aufgeben");
+printf ("Beenden");
 
 
 white_tiles=Count_Tiles (brett,Weiss);
-Black_tiles=Count_Tiles (brett,Schwarz);
+black_tiles=Count_Tiles (brett,Schwarz);
 set_cursor (80,5);
-printf ("Weiss: %i", white_tiles);
+printf ("Weiss: %2i", white_tiles);
 set_cursor (80,7);
-printf ("Schwarz: %i", Black_tiles);
+printf ("Schwarz: %2i", black_tiles);
 set_cursor (80,11);
 if (lastplay==Schwarz) printf ("Spieler: Weiss    ");
 else printf ("Spieler: Schwarz");
@@ -479,9 +787,10 @@ time_played= caculate_time_played(starttime);
 if (time_played.s%2==0) printf ("%i : %i : %i ", time_played.h, time_played.m, time_played.s);
 else printf ("%i   %i   %i ", time_played.h, time_played.m, time_played.s);
 
-for (int x = 0; x < 8; x++)
+
+for (size_t x = 0; x < 8; x++)
 {
-    for (int y = 0; y < 8; y++)
+    for (size_t y = 0; y < 8; y++)
     {
         direction = is_playable(x,y,brett,lastplay);
         if (brett [x][y] ==  Leer||brett [x][y] == Spielbar)
@@ -505,35 +814,55 @@ for (int x = 0; x < 8; x++)
             if (direction.DR == 1) playable_tiles_direction[x][y][7] = 1;
             else playable_tiles_direction[x][y][7] = 0;
         }
+        if (brett[x][y] == Leer)
+        {
+            empty_tile (x,y);
+        }
+        else if (brett[x][y] == Weiss)
+        {
+            white_tile (x,y);
+        }
+        else if (brett[x][y] == Schwarz)
+        {
+            Black_tile (x,y);
+        }
+        else if (brett[x][y] == Spielbar)
+        {
+            empty_tile (x,y);
+            Playable_tile (x,y,lastplay);
+        }
     }
 }
-
-
-
-for (size_t i = 0; i < 8; i++)
+playable=0;
+for (size_t x = 0; x < 8; x++)
 {
-    for (size_t j = 0; j < 8; j++)
+    for (size_t y = 0; y < 8; y++)
     {
-        if (brett[i][j] == Leer)
-        {
-            empty_tile (i,j);
-        }
-        else if (brett[i][j] == Weiss)
-        {
-            white_tile (i,j);
-        }
-        else if (brett[i][j] == Schwarz)
-        {
-            Black_tile (i,j);
-        }
-        else if (brett[i][j] == Spielbar)
-        {
-            empty_tile (i,j);
-            Playable_tile (i,j,lastplay);
-        }
+        direction = is_playable(x,y,brett,Schwarz);
+            if (direction.playable==1)
+                {
+                playable = 1;
+                x=8;
+                y=8;
+                }
+        direction = is_playable(x,y,brett,Weiss);
+            if (direction.playable==1)
+                {
+                playable = 1;
+                x=8;
+                y=8;
+                }
+
+
     }
 }
+
+
+
+
+
 set_cursor (80,17);
+h++;
 printf ("%i", playable_tiles_direction[cursor.x][cursor.y][0]);
 printf ("%i", playable_tiles_direction[cursor.x][cursor.y][1]);
 printf ("%i", playable_tiles_direction[cursor.x][cursor.y][2]);
@@ -543,6 +872,13 @@ printf ("%i", playable_tiles_direction[cursor.x][cursor.y][5]);
 printf ("%i", playable_tiles_direction[cursor.x][cursor.y][6]);
 printf ("%i", playable_tiles_direction[cursor.x][cursor.y][7]);
 printf (" %i", brett [cursor.x][cursor.y]);
+printf (" %i", lastplay);
+printf (" %i", h);
+printf (" %i", playable);
+int playabale_tiles = Count_Tiles (brett,Spielbar);
+set_cursor (10,35);
+printf ("%i",playabale_tiles);
+
 Cursor_tile (cursor.x, cursor.y, lastplay);
 
 
@@ -582,38 +918,116 @@ Cursor_tile (cursor.x, cursor.y, lastplay);
                         }
                     }
                 }
-                else if (cursor.y==8 && cursor.x==0)
+                if (cursor.y==8 && cursor.x==0)
                 {
-                //laden
-                }
-                else if (cursor.y==8 && cursor.x==1)
+                select_load(&savegame);
+                if (savegame == 11)
                 {
-                //speichern
+                   break;
                 }
-                else if (cursor.y==8 && cursor.x==2)
+                else
+                {
+                    load_game(brett,&starttime,&lastplay,&cursor.x,&cursor.y,savegame);
+                }
+                break;
+                }
+                if (cursor.y==8 && cursor.x==1)
+                {
+                select_save(&savegame);
+                if (savegame == 11)
+                {
+                   break;
+                }
+                else
+                {
+                    save_game(brett,starttime,lastplay,cursor.x,cursor.y,savegame);
+                }
+                 break;
+                }
+                if (cursor.y==8 && cursor.x==2)
                 {
                 starttime = pause (starttime);
+                break;
                 }
-                else if (cursor.y==8 && cursor.x==3)
+                if (cursor.y==8 && cursor.x==3)
                 {
-                if (lastplay == Schwarz)
+                    if (lastplay == Schwarz)
                     {
-                        lastplay = Weiss;
+                      if(playabale_tiles==0) lastplay = Weiss;
+                      else
+                        {
+                            set_cursor (5,33);
+                            printf ("Passen nur moeglich wenn kein spielbarer zug verfuegbar ist");
+                            getch();
+                            set_cursor (5,33);
+                            printf ("\33[2K");
+                        }
                     }
-                else if (lastplay == Weiss)
+                    else if (lastplay == Weiss)
                     {
-                        lastplay = Schwarz;
+                      if(playabale_tiles==0) lastplay = Schwarz;
+                      else
+                        {
+                            set_cursor (5,33);
+                            printf ("Passen nur moeglich wenn kein spielbarer zug verfuegbar ist");
+                            getch();
+                            set_cursor (5,33);
+                            printf ("\33[2K");
+                        }
                     }
+                    break;
                 }
-                else if (cursor.y==8 && cursor.x==4)
+                if (cursor.y==8 && cursor.x==4)
                 {
-                //aufgeben
+                exit_game( brett, starttime, lastplay, cursor.x, cursor.y);
+                break;
                 }
-            break;
+
         }
         if (cursor.y >= 8 && cursor.x >= 4)
         {
             cursor.x = 4;
+        }
+
+        //win conditions for 0 tiles
+        if (white_tiles==0) win_screen(time_played,Schwarz,white_tiles,black_tiles);
+        else if (black_tiles==0) win_screen(time_played,Weiss,white_tiles,black_tiles);
+        //win condition for no more playable tiles
+        else if (playable == 0)
+        {
+            if (white_tiles < black_tiles)
+            {
+                win_screen(time_played,Schwarz,white_tiles,black_tiles);
+                reset=1;
+            }
+            else if (white_tiles > black_tiles)
+            {
+                win_screen(time_played,Weiss,white_tiles,black_tiles);
+                reset=1;
+            }
+            else if (white_tiles == black_tiles)
+            {
+                win_screen(time_played,Leer,white_tiles,black_tiles);
+                reset=1;
+            }
+        }
+        if (reset == 1)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    brett[x][y] = Leer;
+                }
+            }
+            cursor.x=0;
+            cursor.y=0;
+            starttime=time(NULL);
+            lastplay=Schwarz;
+            brett [3] [4] = Weiss;
+            brett [4] [3] = Weiss;
+            brett [3] [3] = Schwarz;
+            brett [4] [4] = Schwarz;
         }
 }
 return 0;
