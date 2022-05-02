@@ -33,10 +33,11 @@ int set_color(const char color);
 struct directions is_playable(int x, int y, int brett[8][8], int lastplay)
 {
     #define Leer        0
+    #define Spielbar    3
     struct directions directions={0,0,0,0,0,0,0,0};
     directions.playable = FALSE;
     if ( !is_valid_position( x, y ) ) return directions;
-    //if ( brett[x][y] != Leer ) return directions;
+    if ( brett[x][y] != Leer && brett[x][y] != Spielbar) return directions;
     int current_player=0;
 
 if (lastplay == 1)
@@ -990,7 +991,7 @@ Cursor_tile (cursor.x, cursor.y, lastplay);
         }
 
         //win conditions for 0 tiles
-        if (white_tiles==0) win_screen(time_played,Schwarz,white_tiles,black_tiles);
+        if (/*white_tiles==0*/1) win_screen(time_played,Schwarz,white_tiles,black_tiles);
         else if (black_tiles==0) win_screen(time_played,Weiss,white_tiles,black_tiles);
         //win condition for no more playable tiles
         else if (playable == 0)
@@ -1028,6 +1029,7 @@ Cursor_tile (cursor.x, cursor.y, lastplay);
             brett [4] [3] = Weiss;
             brett [3] [3] = Schwarz;
             brett [4] [4] = Schwarz;
+            reset = 0;
         }
 }
 return 0;

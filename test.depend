@@ -13,3 +13,12 @@
 
 1651332733 source:c:\users\yanni\documents\tprl\reversi-in-c\icon.rc
 
+1651472377 source:c:\users\yannik\documents\tprl\reversi\reversi-in-c\icon.rc
+
+1651472746 source:c:\users\yannik\documents\tprl\reversi\reversi-in-c\main.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<conio.h>
+	<time.h>
+
