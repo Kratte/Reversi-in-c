@@ -49,96 +49,96 @@ else
     current_player = 1;
 }
     // Test UL diagonal
-    int y_current = y-1, x_current = x-1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    int y_pos = y-1, x_pos = x-1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
     {
-        y_current -= 1;
-        x_current -= 1;
+        y_pos --;
+        x_pos --;
     }
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.UL = 1;
         directions.playable = TRUE;
     }
 
     // Test UP path
-    y_current = y-1, x_current = x;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
-        y_current -= 1;
+    y_pos = y-1, x_pos = x;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
+        y_pos --;
 
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.U = 1;
         directions.playable = TRUE;
     }
 
     // Test UR diagonal
-    y_current = y-1, x_current = x+1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    y_pos = y-1, x_pos = x+1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
     {
-        y_current -= 1;
-        x_current += 1;
+        y_pos --;
+        x_pos ++;
     }
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.UR = 1;
         directions.playable = TRUE;
     }
 
     // Test LEFT path
-    y_current = y, x_current = x-1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
-        x_current -= 1;
+    y_pos = y, x_pos = x-1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
+        x_pos --;
 
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.L = 1;
         directions.playable = TRUE;
     }
 
     // Test RIGHT path
-    y_current = y, x_current = x+1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
-        x_current += 1;
+    y_pos = y, x_pos = x+1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
+        x_pos ++;
 
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.R = 1;
         directions.playable = TRUE;
     }
 
     // Test DL diagonal
-    y_current = y+1, x_current = x-1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    y_pos = y+1, x_pos = x-1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
     {
-        y_current += 1;
-        x_current -= 1;
+        y_pos ++;
+        x_pos --;
     }
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.DL = 1;
         directions.playable = TRUE;
     }
 
     // Test DOWN path
-    y_current = y+1, x_current = x;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
-        y_current ++;
+    y_pos = y+1, x_pos = x;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
+        y_pos ++;
 
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player  )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player  )
     {
         directions.D = 1;
         directions.playable = TRUE;
     }
 
     // Test DR diagonal
-    y_current = y+1, x_current = x+1;
-    while ( is_valid_position( y_current, x_current ) && brett[x_current][y_current] == lastplay )
+    y_pos = y+1, x_pos = x+1;
+    while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
     {
-        y_current += 1;
-        x_current += 1;
+        y_pos ++;
+        x_pos ++;
     }
-    if ( is_valid_position( y_current, x_current ) && distance( y, x, y_current, x_current ) > 1 && brett[x_current][y_current] == current_player )
+    if ( is_valid_position( y_pos, x_pos ) && distance( y, x, y_pos, x_pos ) > 1 && brett[x_pos][y_pos] == current_player )
     {
         directions.DR = 1;
         directions.playable = TRUE;
@@ -160,111 +160,111 @@ else
     current_player = 1;
     opponent_player = 2;
 }
-    int x_current, y_current;
+    int x_pos, y_pos;
 
     // Capture UL diagonal
     if ( playable_tiles_direction[x][y][0] )
     {
-        y_current = y-1, x_current = x-1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y-1, x_pos = x-1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current -= 1;
-            x_current -= 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos --;
+            x_pos --;
         }
     }
 
     // Capture UP path
     if ( playable_tiles_direction[x][y][1] )
     {
-        y_current = y-1, x_current = x;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y-1, x_pos = x;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current -= 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos --;
         }
     }
 
     // Capture UR diagonal
     if ( playable_tiles_direction[x][y][2] )
     {
-        y_current = y-1, x_current = x+1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y-1, x_pos = x+1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current -= 1;
-            x_current += 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos --;
+            x_pos ++;
         }
     }
 
     // Capture LEFT path
     if ( playable_tiles_direction[x][y][3] )
     {
-        y_current = y, x_current = x-1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y, x_pos = x-1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            x_current -= 1;
+            brett[x_pos][y_pos] = current_player;
+            x_pos --;
         }
     }
 
     // Capture RIGHT path
     if ( playable_tiles_direction[x][y][4] )
     {
-        y_current = y, x_current = x+1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y, x_pos = x+1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            x_current += 1;
+            brett[x_pos][y_pos] = current_player;
+            x_pos ++;
         }
     }
 
     // Capture DL diagonal
     if ( playable_tiles_direction[x][y][5] )
     {
-        y_current = y+1, x_current = x-1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y+1, x_pos = x-1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current += 1;
-            x_current -= 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos ++;
+            x_pos --;
         }
     }
 
     // Capture DOWN path
     if ( playable_tiles_direction[x][y][6] )
     {
-        y_current = y+1, x_current = x;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y+1, x_pos = x;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current += 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos ++;
         }
     }
 
     // Capture DR diagonal
     if ( playable_tiles_direction[x][y][7] )
     {
-        y_current = y+1, x_current = x+1;
-        while ( brett[x_current][y_current] == opponent_player )
+        y_pos = y+1, x_pos = x+1;
+        while ( brett[x_pos][y_pos] == opponent_player )
         {
-            brett[x_current][y_current] = current_player;
-            y_current += 1;
-            x_current += 1;
+            brett[x_pos][y_pos] = current_player;
+            y_pos ++;
+            x_pos ++;
         }
     }
 }
 
-int distance( int i1, int j1, int i2, int j2 )
+int distance( int X1, int y1, int x1, int y2 )
 {
-    int di = abs( i1 - i2 ), dj = abs( j1 - j2 );
-    if ( di > 0 ) return di;
-    return dj;
+    int dx = abs( X1 - x1 ), dy = abs( y1 - y2 );
+    if ( dx > 0 ) return dx;
+    return dy;
 }
 
-int is_valid_position( int i, int j )
+int is_valid_position( int x, int y )
 {
-    if ( i < 0 || i >= 8 || j < 0 || j >= 8 ) return FALSE;
+    if ( x < 0 || x >= 8 || y < 0 || y >= 8 ) return FALSE;
     return TRUE;
 }
 
@@ -511,6 +511,7 @@ void win_screen (struct time_played time_played, int winner, int white_tiles, in
     printf ("Schwarz: %2i", black_tiles);
     set_cursor (20,14);
     printf ("Taste druecken um ein neues Spiel zu starten");
+    getch();
     getch();
     for (size_t i = 0; i < 35; i++)
     {
@@ -882,6 +883,48 @@ printf ("%i",playabale_tiles);
 
 Cursor_tile (cursor.x, cursor.y, lastplay);
 
+        //win conditions for 0 tiles
+        //if (white_tiles==0) win_screen(time_played,Schwarz,white_tiles,black_tiles);
+        //else if (black_tiles==0) win_screen(time_played,Weiss,white_tiles,black_tiles);
+        
+        //win condition for no more playable tile
+        /*else*/ if (playable == 0)
+        {
+            if (white_tiles < black_tiles)
+            {
+                win_screen(time_played,Schwarz,white_tiles,black_tiles);
+                reset=1;
+            }
+            else if (white_tiles > black_tiles)
+            {
+                win_screen(time_played,Weiss,white_tiles,black_tiles);
+                reset=1;
+            }
+            else if (white_tiles == black_tiles)
+            {
+                win_screen(time_played,Leer,white_tiles,black_tiles);
+                reset=1;
+            }
+        }
+        if (reset == 1)
+        {
+            for(int x = 0; x < 8; x++)
+            {
+                for(int y = 0; y < 8; y++)
+                {
+                    brett[x][y] = Leer;
+                }
+            }
+            cursor.x=0;
+            cursor.y=0;
+            starttime=time(NULL);
+            lastplay=Schwarz;
+            brett [3] [4] = Weiss;
+            brett [4] [3] = Weiss;
+            brett [3] [3] = Schwarz;
+            brett [4] [4] = Schwarz;
+            reset = 0;
+        }
 
  switch(getch()){
         case 72:
@@ -990,47 +1033,7 @@ Cursor_tile (cursor.x, cursor.y, lastplay);
             cursor.x = 4;
         }
 
-        //win conditions for 0 tiles
-        if (/*white_tiles==0*/1) win_screen(time_played,Schwarz,white_tiles,black_tiles);
-        else if (black_tiles==0) win_screen(time_played,Weiss,white_tiles,black_tiles);
-        //win condition for no more playable tiles
-        else if (playable == 0)
-        {
-            if (white_tiles < black_tiles)
-            {
-                win_screen(time_played,Schwarz,white_tiles,black_tiles);
-                reset=1;
-            }
-            else if (white_tiles > black_tiles)
-            {
-                win_screen(time_played,Weiss,white_tiles,black_tiles);
-                reset=1;
-            }
-            else if (white_tiles == black_tiles)
-            {
-                win_screen(time_played,Leer,white_tiles,black_tiles);
-                reset=1;
-            }
-        }
-        if (reset == 1)
-        {
-            for(int x = 0; x < 8; x++)
-            {
-                for(int y = 0; y < 8; y++)
-                {
-                    brett[x][y] = Leer;
-                }
-            }
-            cursor.x=0;
-            cursor.y=0;
-            starttime=time(NULL);
-            lastplay=Schwarz;
-            brett [3] [4] = Weiss;
-            brett [4] [3] = Weiss;
-            brett [3] [3] = Schwarz;
-            brett [4] [4] = Schwarz;
-            reset = 0;
-        }
+
 }
 return 0;
 }
