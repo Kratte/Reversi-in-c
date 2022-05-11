@@ -17,20 +17,20 @@
 
 struct directions is_playable(int x, int y, int brett[8][8], int lastplay)
 {
-    struct directions directions={0,0,0,0,0,0,0,0};
+    struct directions directions= {0,0,0,0,0,0,0,0};
     directions.playable = FALSE;
     if ( !is_valid_position( x, y ) ) return directions;
     if ( brett[x][y] != Leer && brett[x][y] != Spielbar) return directions;
     int current_player=0;
 
-if (lastplay == 1)
-{
-    current_player = 2;
-}
-else
-{
-    current_player = 1;
-}
+    if (lastplay == 1)
+    {
+        current_player = 2;
+    }
+    else
+    {
+        current_player = 1;
+    }
     // Test UL diagonal
     int y_pos = y-1, x_pos = x-1;
     while ( is_valid_position( y_pos, x_pos ) && brett[x_pos][y_pos] == lastplay )
@@ -131,18 +131,18 @@ else
 
 void capture_pieces( int x, int y, int brett[8][8],int lastplay, int playable_tiles_direction[8][8][8] )
 {
-int current_player;
-int opponent_player;
-if (lastplay == 1)
-{
-    current_player = 2;
-    opponent_player = 1;
-}
-else
-{
-    current_player = 1;
-    opponent_player = 2;
-}
+    int current_player;
+    int opponent_player;
+    if (lastplay == 1)
+    {
+        current_player = 2;
+        opponent_player = 1;
+    }
+    else
+    {
+        current_player = 1;
+        opponent_player = 2;
+    }
     int x_pos, y_pos;
 
     // Capture UL diagonal
@@ -302,28 +302,30 @@ void Cursor_tile (int x, int y,int lastplay)
     else   SetConsoleTextAttribute(hConsole, 8);
     int x_cursor[8] = {2,11,20,29,38,47,56,65};
     int y_cursor[8] = {1,5,9,13,17,21,25,29};
-        for (size_t i = 0; i < 8; i++)
+    for (size_t i = 0; i < 8; i++)
     {
         set_cursor  (0,y_cursor[i]-1);
         printf ("\33[2K");
     }
-        set_cursor  (0,32);
-        printf ("\33[2K");
-    if (y<8){
+    set_cursor  (0,32);
+    printf ("\33[2K");
+    if (y<8)
+    {
 
 
 
 
 
-    set_cursor (x_cursor[x]-1,y_cursor[y]-1);
-    printf ("\xc9\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbb");
-    set_cursor (x_cursor[x]-1,y_cursor[y]+3);
-    printf ("\xc8\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbc");
-    set_cursor (x_cursor[x]+3,y_cursor[y]+2);
+        set_cursor (x_cursor[x]-1,y_cursor[y]-1);
+        printf ("\xc9\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbb");
+        set_cursor (x_cursor[x]-1,y_cursor[y]+3);
+        printf ("\xc8\xcd\xcd\xcd\xcd\xcd\xcd\xcd\xbc");
+        set_cursor (x_cursor[x]+3,y_cursor[y]+2);
     }
-    else{
-    int x_cursor2[5] = {2,10,22,30,39};
-    set_cursor (x_cursor2[x],34);
+    else
+    {
+        int x_cursor2[5] = {2,10,22,30,39};
+        set_cursor (x_cursor2[x],34);
     }
 }
 void empty_tile (int x, int y)
@@ -369,7 +371,7 @@ int save_game ( int brett[8][8], long long starttime, int lastplay, int x, int y
         }
         fprintf(fp, "\n");
     }
-    fprintf(fp, "%d %d %d %d %d\n", timeplayed ,lastplay, x, y, 0);
+    fprintf(fp, "%d %d %d %d %d\n", timeplayed,lastplay, x, y, 0);
     fclose(fp);
     return 0;
 }
@@ -421,7 +423,8 @@ int select_save (int *savegame)
     set_cursor (20,3);
     printf("Select savegame to Save:");
     set_cursor (20,6);
-    printf ("savegame 1");\
+    printf ("savegame 1");
+    \
     set_cursor (20,8);
     printf ("savegame 2");
     set_cursor (20,10);
@@ -444,25 +447,26 @@ int select_save (int *savegame)
     printf ("back");
     while (1)
     {
-    set_cursor (20,cursory[cursorsave.y]);
-        switch(getch()){
-            case 72:
-                if (cursorsave.y >0)
-                    cursorsave.y--;
-                break;
-            case 80:
-                if (cursorsave.y <10)
-                    cursorsave.y++;
-                break;
-            case 13:
-                *savegame = cursorsave.y+1;
-                    for (size_t i = 0; i < 32; i++)
-                        {
-                            set_cursor (1,i+1);
-                            printf ("\33[2K");
-                        }
-                return cursorsave.y+1;
+        set_cursor (20,cursory[cursorsave.y]);
+        switch(getch())
+        {
+        case 72:
+            if (cursorsave.y >0)
+                cursorsave.y--;
+            break;
+        case 80:
+            if (cursorsave.y <10)
+                cursorsave.y++;
+            break;
+        case 13:
+            *savegame = cursorsave.y+1;
+            for (size_t i = 0; i < 32; i++)
+            {
+                set_cursor (1,i+1);
+                printf ("\33[2K");
             }
+            return cursorsave.y+1;
+        }
     }
 }
 
@@ -478,7 +482,8 @@ int select_load (int *savegame)
     set_cursor (20,3);
     printf("Select savegame to Load:");
     set_cursor (20,6);
-    printf ("savegame 1");\
+    printf ("savegame 1");
+    \
     set_cursor (20,8);
     printf ("savegame 2");
     set_cursor (20,10);
@@ -501,31 +506,32 @@ int select_load (int *savegame)
     printf ("back");
     while (1)
     {
-    set_cursor (20,cursory[cursorsave.y]);
-        switch(getch()){
-            case 72:
-                if (cursorsave.y >0)
-                    cursorsave.y--;
-                break;
-            case 80:
-                if (cursorsave.y <10)
-                    cursorsave.y++;
-                break;
-            case 13:
-                *savegame = cursorsave.y+1;
-                    for (size_t i = 0; i < 32; i++)
-                        {
-                            set_cursor (1,i+1);
-                            printf ("\33[2K");
-                        }
-                return cursorsave.y+1;
+        set_cursor (20,cursory[cursorsave.y]);
+        switch(getch())
+        {
+        case 72:
+            if (cursorsave.y >0)
+                cursorsave.y--;
+            break;
+        case 80:
+            if (cursorsave.y <10)
+                cursorsave.y++;
+            break;
+        case 13:
+            *savegame = cursorsave.y+1;
+            for (size_t i = 0; i < 32; i++)
+            {
+                set_cursor (1,i+1);
+                printf ("\33[2K");
             }
+            return cursorsave.y+1;
+        }
     }
 }
 
 void win_screen (struct time_played time_played, int winner, int white_tiles, int black_tiles)
 {
-      for (size_t i = 0; i < 35; i++)
+    for (size_t i = 0; i < 35; i++)
     {
         set_cursor (1,i+1);
         printf ("\33[2K");
@@ -570,88 +576,98 @@ void exit_game ( int brett[8][8], long long starttime, int lastplay, int x, int 
     while (i == 0 )
     {
         i=0;
-            set_cursor (20,5);
-                printf ("Wollen Sie das Spiel vorher Speichern?");
-            set_cursor (35,7);
-                printf ("ja    /   nein");
-            if(cursor==0) set_cursor (35,7);
-            else if(cursor==1) set_cursor (45,7);
-switch(getch()){
+        set_cursor (20,5);
+        printf ("Wollen Sie das Spiel vorher Speichern?");
+        set_cursor (35,7);
+        printf ("ja    /   nein");
+        if(cursor==0) set_cursor (35,7);
+        else if(cursor==1) set_cursor (45,7);
+        switch(getch())
+        {
             break;
         case 77:
-                cursor=1;
+            cursor=1;
             break;
         case 75:
-                cursor=0;
+            cursor=0;
             break;
         case 13:
-        if (cursor==0)
-        {
-            select_save(&savegame);
-            if (savegame == 11)
+            if (cursor==0)
             {
-            break;
+                select_save(&savegame);
+                if (savegame == 11)
+                {
+                    break;
+                }
+                else
+                {
+                    save_game(brett,starttime,lastplay,x,y,savegame);
+                    i=1;
+                }
+                break;
             }
-            else
+            else if (cursor==1)
             {
-            save_game(brett,starttime,lastplay,x,y,savegame);
-            i=1;
+                i=1;
+                break;
             }
-        break;
         }
-        else if (cursor==1)
+        for (size_t i = 0; i < 35; i++)
         {
-        i=1;
-        break;
-        }
-    }
-    for (size_t i = 0; i < 35; i++)
-            {
             set_cursor (1,i+1);
             printf ("\33[2K");
-            }
-}
-i=0;
+        }
+    }
+    i=0;
     while (i == 0 )
     {
         i=0;
-            set_cursor (20,5);
-                printf ("Wollen Sie das Spiel Wirklioh beenden?");
+        set_cursor (20,5);
+        printf ("Wollen Sie das Spiel Wirklich beenden?");
+        set_cursor (35,7);
+        printf ("ja    /   nein");
+        if(cursor==0)
             set_cursor (35,7);
-                printf ("ja    /   nein");
-                if(cursor==0)
-                    set_cursor (35,7);
-                    else
-                    set_cursor (45,7);
-    switch(getch()){
+        else
+            set_cursor (45,7);
+        switch(getch())
+        {
             break;
         case 77:
-                cursor=1;
+            cursor=1;
             break;
         case 75:
-                cursor=0;
+            cursor=0;
             break;
         case 13:
-        if (cursor==0)
-        {
-            exit(0);
-        break;
-        }
-        else if (cursor==1)
-        {
-        return;
+            if (cursor==0)
+            {
+                exit(0);
+                break;
+            }
+            else if (cursor==1)
+            {
+                //bildschirm leeren bevor die funktion verlassen wird
+                for (size_t i = 0; i < 35; i++)
+                {
+                    set_cursor (1,i+1);
+                    printf ("\33[2K");
+                }
+                return;
+            }
+
         }
         break;
 
-        }
+    }
     for (size_t i = 0; i < 35; i++)
     {
         set_cursor (1,i+1);
         printf ("\33[2K");
     }
 
-    }
 }
+
 
 
 /*
@@ -709,7 +725,7 @@ long long pause (long long starttime)
     printf ("\33[2K");
 
     return starttime+time(NULL)-pausestart;
-    }
+}
 
 
 
@@ -809,41 +825,6 @@ int set_cursor(const int x, const int y)
     }
 
     return return_value;
-}
-
-
-/**
- * \ingroup KonsolenDemo
- * \brief Sets color of current console
- *
- * \param color color to be set (see comment)
- * \return 0 if code page was set, else 1
- */
-int set_color(const char color)
-{
-    int set_color_failed = 0;
-
-    /* Colors are defined by two hexadecimal numbers. First number sets
-     * background color, the second number sets foreground color. Each one
-     * be one of the following values:
-     *     0 = black         8 = dark grey
-     *     1 = dark blue     9 = blue
-     *     2 = drk green     A = green
-     *     3 = blue green    B = cyan
-     *     4 = dark red      C = red
-     *     5 = purple        D = magenta
-     *     6 = ocher         E = yellow
-     *     7 = light grey    F = white
-     */
-
-    HANDLE hstdout = GetStdHandle(STD_OUTPUT_HANDLE);
-    CONSOLE_SCREEN_BUFFER_INFO csbi;
-    GetConsoleScreenBufferInfo(hstdout, &csbi);
-
-    set_color_failed = SetConsoleTextAttribute(hstdout, color);
-
-    // reverse "wrong" return value from Windows API
-    return set_color_failed ? 0 : 1;
 }
 
 
