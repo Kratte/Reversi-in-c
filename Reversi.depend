@@ -4,12 +4,13 @@
 	<stdlib.h>
 	<windows.h>
 
-1651587515 source:c:\users\yanni\documents\tprl\reversi-in-c\main.c
+1652281624 source:c:\users\yanni\documents\tprl\reversi-in-c\main.c
 	<stdio.h>
 	<stdlib.h>
 	<windows.h>
 	<conio.h>
 	<time.h>
+	"Funktionen.h"
 
 1651496317 source:c:\users\yanni\documents\tprl\reversi-in-c\icon.rc
 
@@ -32,4 +33,14 @@
 	"funktionen.h"
 
 1651655019 c:\users\yannik\documents\tprl\reversi\reversi-in-c\funktionen.h
+
+1652287819 c:\users\yanni\documents\tprl\reversi-in-c\funktionen.h
+
+1652287823 source:c:\users\yanni\documents\tprl\reversi-in-c\funktionen.c
+	<stdio.h>
+	<stdlib.h>
+	<windows.h>
+	<conio.h>
+	<time.h>
+	"funktionen.h"
 

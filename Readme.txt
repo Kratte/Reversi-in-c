@@ -1,0 +1,1 @@
+Spiel muss aus dem ordner gestartet werden und nicht aus code::Blocks damit die laden und speicher funktion korrekt funktioniert
